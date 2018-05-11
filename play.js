@@ -34,7 +34,7 @@ colorInput.onchange = function(e){
 }
 
 var step = function(){
-	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){ 
+	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){
 			ctx.putImageData(frames[currentFrame],0,0)
 						currentFrame++;
 
@@ -45,7 +45,7 @@ var step = function(){
 	animationCounter++;
 	if(currentFrame===frames.length){currentFrame=0}
 	myreq = requestAnimationFrame(step);
-	
+
 }
 
 video.onended = function(){
@@ -57,10 +57,10 @@ video.onended = function(){
       if (i < f.data.length/4 && g > r && g > b && c%2==0){
         f.data[i * 4 + 3] = 0;
     }
-    else{
-    	f.data[i]=f.data[(f.data.length-i)];
+    // else{
+    // 	f.data[i]=f.data[(f.data.length-i)];
+    // }
     }
-    } 
 	return f
 	})
 
@@ -69,7 +69,7 @@ myreq = requestAnimationFrame(step);
 }
 
 video.onplaying = function(){
-	timerCallback() 
+	timerCallback()
 }
 
 var timerCallback = function() {
@@ -81,7 +81,7 @@ var timerCallback = function() {
 	  //  ctx.translate(video.width/2, video.height/2);
    // ctx.rotate(2*Math.PI/180);
    //   ctx.translate(-video.width/2, -video.height/2);
-	frames.push(ctx.getImageData(0,0,video.width,video.height));	    
+	frames.push(ctx.getImageData(0,0,video.width,video.height));
 	var timeout = setTimeout(function() {
         timerCallback();
       }, 0);
