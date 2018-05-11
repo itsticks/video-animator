@@ -1,7 +1,7 @@
-(function(){
+//(function(){
 
 var fps = 30;
-var animationFrameInterval = Math.round(1000/fps);
+var animationFrameInterval = 1;//Math.round(1000/fps);
 var currentTime = 0;
 var frames = [];
 var framePopulationCount = 0;
@@ -13,29 +13,59 @@ var video = document.createElement('video');
 video.width=450;
 video.height=360;
 video.controls=true;
-video.src= 'DSC_0028.mov';
+video.autoplay=true;
+video.playbackRate=2;
+video.src= 'DSC_0042.mov';
 
 var canvas = document.createElement('canvas');
 canvas.width = video.width;
 canvas.height = video.height;
+canvas.style.backgroundColor = "#009900";
 
 var ctx = canvas.getContext('2d');
 ctx.fillStyle = "red"
 ctx.font = "15px Arial";
 
+var colorInput = document.createElement('input');
+colorInput.type = 'color';
+colorInput.value='#009900';
+colorInput.onchange = function(e){
+	canvas.style.backgroundColor = e.target.value;
+}
+
+var step = function(){
+	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){ 
+			ctx.putImageData(frames[currentFrame],0,0)
+						currentFrame++;
+
+			// ctx.clearRect(0,0,50,25)
+			// ctx.fillText(animationCounter,10,20)
+	}
+
+	animationCounter++;
+	if(currentFrame===frames.length){currentFrame=0}
+	myreq = requestAnimationFrame(step);
+	
+}
 
 video.onended = function(){
-var step = function(){
-	ctx.clearRect(0,0,50,25)
-			ctx.fillText(animationCounter,10,20)
-	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){ 
-			ctx.putImageData(frames[currentFrame],450,360)
-						currentFrame++;
-	}
-	animationCounter++;
-	myreq = requestAnimationFrame(step);
-}
+	frames = frames.map(function(f,c){
+		 for (let i = 0; i < f.data.length; i++) {
+      let r = f.data[i * 4 + 0];
+      let g = f.data[i * 4 + 1];
+      let b = f.data[i * 4 + 2];
+      if (i < f.data.length/4 && g > r && g > b && c%2==0){
+        f.data[i * 4 + 3] = 0;
+    }
+    else{
+    	f.data[i]=f.data[(f.data.length-i)];
+    }
+    } 
+	return f
+	})
+
 myreq = requestAnimationFrame(step);
+
 }
 
 video.onplaying = function(){
@@ -47,7 +77,10 @@ var timerCallback = function() {
     	clearTimeout(timeout);
       return;
     }
-	ctx.drawImage(video,0,0,video.width,video.height); 	
+	ctx.drawImage(video,0,0,video.width,video.height);
+	  //  ctx.translate(video.width/2, video.height/2);
+   // ctx.rotate(2*Math.PI/180);
+   //   ctx.translate(-video.width/2, -video.height/2);
 	frames.push(ctx.getImageData(0,0,video.width,video.height));	    
 	var timeout = setTimeout(function() {
         timerCallback();
@@ -57,47 +90,12 @@ var timerCallback = function() {
 video.oncanplaythrough = function(){
 if(!framesCaptured){
 framesCaptured = true;
-document.body.append(video);
+// document.body.append(video);
 document.body.append(canvas);
-
+document.body.append(colorInput);
 var numberOfFrames = Math.round(video.duration*fps);
 }
 }
 
-// frames = Array.from(Array(numberOfFrames))
-// .map(x=>{
-// 	video.currentTime=currentTime;
-// 	currentTime=currentTime+(1/fps);
-// 	ctx.drawImage(video,0,0,video.width,video.height);
-// 	return ctx.getImageData(0,0,video.width,video.height);	
-// })
 
-
-
-// video.play();
-// var framePopulation = setInterval(function(){
-// 	//video.currentTime=currentTime;
-// 	//currentTime=currentTime+(1/fps);
-// 	video.pause();
-// 	if(framePopulationCount==numberOfFrames){
-// 		clearInterval(framePopulation)
-// 	}
-// 	framePopulationCount++;
-// },1000/fps)
-
-// for(var i = 0; i<=numberOfFrames; i++){
-// 	video.currentTime=currentTime;
-// 	currentTime=currentTime+(1/fps);
-// }
-
-// video.onpause = function(){
-// 	ctx.drawImage(video,0,0,video.width,video.height);	
-// 	frames.push(ctx.getImageData(0,0,video.width,video.height));
-// 	video.play()
-// }
-
-
-
-
-
-})();
+//})();
