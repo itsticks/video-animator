@@ -52,10 +52,10 @@ ImageData.prototype.invert = function(){
 }
 
 ImageData.prototype.alphaGreen = function(){
-	for (let i = 0; i < this.data.length; i++) {
-	 let r = this.data[i * 4 + 0];
-	 let g = this.data[i * 4 + 1];
-	 let b = this.data[i * 4 + 2];
+	for (var i = 0; i < this.data.length; i++) {
+	 var r = this.data[i * 4 + 0];
+	 var g = this.data[i * 4 + 1];
+	 var b = this.data[i * 4 + 2];
 	 if (i < this.data.length/4 && g > r && g > b){
 		 this.data[i * 4 + 3] = 0;
  	}
