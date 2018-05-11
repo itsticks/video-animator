@@ -15,7 +15,8 @@ video.height=360;
 video.controls=true;
 video.autoplay=true;
 video.playbackRate=2;
-video.src= 'DSC_0042.mov';
+video.crossOrigin = "Anonymous";
+video.src= 'https://doc-04-1k-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/48qtoi7qgrun5g8nl41t7a6hi8hviuon/1526032800000/01524003728762920652/*/1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm?e=view';
 
 var canvas = document.createElement('canvas');
 canvas.width = video.width;
