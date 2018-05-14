@@ -2,9 +2,14 @@
 <html>
   <head>
     <title>video animator</title>
-    <style> canvas,video,input{display:block} </style>
+    <style>
+    canvas,video,input{display:block}
+    .canvas-bg {
+  background: -webkit-canvas(animation) no-repeat 50% 50%;
+}
+    </style>
   </head>
-  <body>
+  <body class=".canvas-bg">
   	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.min.js"></script>
   	    <script type="text/javascript" src="play.js"></script>
 </body>

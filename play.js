@@ -17,7 +17,7 @@ video.autoplay=true;
 video.muted=true;
 video.playbackRate=2;
 video.crossOrigin = "Anonymous";
-video.src= 'https://doc-04-1k-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/bpe4rahfj1gds8jethisnmv45ac7ibhu/1526241600000/01524003728762920652/*/1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm?e=download';
+video.src= 'https://doc-04-1k-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/jg74n3fnnn6pi70fk51dqgosm13d5a2a/1526313600000/01524003728762920652/*/1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm?e=download';
 // https://drive.google.com/uc?export=download&id=1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm
 
 var canvas = document.createElement('canvas');
@@ -33,7 +33,7 @@ ctx.font = "15px Arial";
 
 var videoInput = document.createElement('input');
 videoInput.type = 'url';
-videoInput.value='https://doc-04-1k-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/48qtoi7qgrun5g8nl41t7a6hi8hviuon/1526032800000/01524003728762920652/*/1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm?e=view';
+videoInput.value=video.src;
 videoInput.onchange = function(e){
 	video.src = e.target.value;
 }
@@ -54,19 +54,19 @@ ImageData.prototype.invert = function(){
 	return this;
 }
 
-ImageData.prototype.bugs = function(){
+ImageData.prototype.gray = function(){
 	for (var i = 0; i < this.data.length; i += 4) {
 	var r = this.data[i + 0];
 	var g = this.data[i + 1];
 	var b = this.data[i + 2];
-	
+
 	var v = r + g + b;
 	v /= 3;
-	
+
 	this.data[i + 0] = v;
 	this.data[i + 1] = v;
 	this.data[i + 2] = v;
-}	
+}
 return this;
 }
 
@@ -97,14 +97,22 @@ ImageData.prototype.alphaNonGreen = function(){
 
 ImageData.prototype.greenScramble = function(){
 	for (var i = 0; i < this.data.length; i++) {
-	 var r = this.data[i * 4 + 0];
-	 var g = this.data[i * 4 + 1];
-	 var b = this.data[i * 4 + 2];
-	 if (i < this.data.length/4 && g > r && g > b){
-		 this.data[i * 4 + 3] = this.data[(this.data.length/4)-(i)+1];
- 	}
+		// if(i<this.data.length/2){
+		//  this.data[i] = this.data[this.data.length/4 + i];
+	 // }
+	// else{
+	this.data[i] = Math.round(this.data.length/i) %2<1 ? this.data[this.data.length-i] : this.data.reverse()[i]
+	// }
  }
  return this;
+}
+
+ImageData.prototype.reversePixels = function(){
+	var buf8 = new Uint8ClampedArray(this.data);
+
+
+	this.data.set(buf8.reverse());
+	return this;
 }
 
 ImageData.prototype.scramble = function(){
@@ -130,7 +138,7 @@ var step = function(){
 
 video.onended = function(){
 	frames = frames.map(function(f,i){
-	 return (i%2==0) ? f.bugs() :f.alphaGreen();
+	 return (i%2==0) ? f.greenScramble() : f.reversePixels();
 	//return f.invert();
 	})
 	// .map(function(f,i){
