@@ -17,7 +17,7 @@ video.autoplay=true;
 video.muted=true;
 video.playbackRate=2;
 video.crossOrigin = "Anonymous";
-video.src= 'https://doc-04-1k-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/p93vva5tfv05hl4bu4oonu1sn1jhj9bp/1526212800000/01524003728762920652/*/1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm?e=download';
+video.src= 'https://doc-04-1k-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/bpe4rahfj1gds8jethisnmv45ac7ibhu/1526241600000/01524003728762920652/*/1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm?e=download';
 // https://drive.google.com/uc?export=download&id=1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm
 
 var canvas = document.createElement('canvas');
@@ -54,25 +54,54 @@ ImageData.prototype.invert = function(){
 	return this;
 }
 
+ImageData.prototype.bugs = function(){
+	for (var i = 0; i < this.data.length; i += 4) {
+	var r = this.data[i + 0];
+	var g = this.data[i + 1];
+	var b = this.data[i + 2];
+	
+	var v = r + g + b;
+	v /= 3;
+	
+	this.data[i + 0] = v;
+	this.data[i + 1] = v;
+	this.data[i + 2] = v;
+}	
+return this;
+}
+
 ImageData.prototype.alphaGreen = function(){
-	for (var i = 0; i < this.data.length; i++) {
+	for (var i = 0; i < this.data.length/4; i++) {
 	 var r = this.data[i * 4 + 0];
 	 var g = this.data[i * 4 + 1];
 	 var b = this.data[i * 4 + 2];
-	 if (i < this.data.length/4 && g > r && g > b){
+	 if (g > r && g > b){
 		 this.data[i * 4 + 3] = 0;
  	}
  }
  return this;
 }
 
-ImageData.prototype.alphaBlue = function(){
+ImageData.prototype.alphaNonGreen = function(){
+	for (var i = 0; i < this.data.length/4; i++) {
+	 var r = this.data[i * 4 + 0];
+	 var g = this.data[i * 4 + 1];
+	 var b = this.data[i * 4 + 2];
+	 if (r > g || b > g){
+		 this.data[i * 4 + 3] = 0;
+ 	}
+ }
+ return this;
+}
+
+
+ImageData.prototype.greenScramble = function(){
 	for (var i = 0; i < this.data.length; i++) {
 	 var r = this.data[i * 4 + 0];
 	 var g = this.data[i * 4 + 1];
 	 var b = this.data[i * 4 + 2];
-	 if (i < this.data.length/4 && b > r && b > g){
-		 this.data[i * 4 + 3] = 0;
+	 if (i < this.data.length/4 && g > r && g > b){
+		 this.data[i * 4 + 3] = this.data[(this.data.length/4)-(i)+1];
  	}
  }
  return this;
@@ -101,7 +130,7 @@ var step = function(){
 
 video.onended = function(){
 	frames = frames.map(function(f,i){
-	 return (i%2==0) ? f.alphaGreen() : f ;
+	 return (i%2==0) ? f.bugs() :f.alphaGreen();
 	//return f.invert();
 	})
 	// .map(function(f,i){
