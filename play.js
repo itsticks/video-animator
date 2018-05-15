@@ -17,7 +17,7 @@ video.autoplay=true;
 video.muted=true;
 video.playbackRate=2;
 video.crossOrigin = "Anonymous";
-video.src= 'https://doc-04-1k-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/n4u8m38t0t9i26mq4cspkgrf2slefdcu/1526364000000/01524003728762920652/*/1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm?e=download';
+video.src= 'https://wishing-wellness.com/img/DSC_0042.MOV';
 // https://drive.google.com/uc?export=download&id=1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm
 
 var canvas = document.createElement('canvas');
