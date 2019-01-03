@@ -16,13 +16,37 @@ video.controls=true;
 video.autoplay=true;
 video.muted=true;
 video.playbackRate=2;
-video.crossOrigin = "Anonymous";
-video.src= 'https://wishing-wellness.com/img/DSC_0042.MOV';
+//video.crossOrigin = "Anonymous";
+video.src= 'DSC_0042.MOV';
 // https://drive.google.com/uc?export=download&id=1ZwhE85SPCAo6U5A6aC7D6spHviLSgSBm
 
+
+var facingMode = window.innerWidth > window.innerHeight ? "user" : "environment";
+ // var video = document.createElement('video');
+     var track;
+  video.setAttribute('autoplay',true);
+  video.setAttribute('playsinline',true);
+video.setAttribute("controls", true);
+
+  window.vid = video;
+  
+  function getWebcam(){ 
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false }).then(function(stream) {
+	    window.stream = stream; 
+      video.srcObject = stream;
+      track = stream.getTracks()[0];
+    }).catch(function(error){
+        console.error(error);
+    });
+  }
+  
+
+
+
+
 var canvas = document.createElement('canvas');
-canvas.width = video.width;
-canvas.height = video.height;
+canvas.width = 450//video.width;
+canvas.height = 365 //video.height;
 canvas.style.backgroundColor = "#000099";
 //canvas.style.backgroundImage = 'url(https://cdn.spacetelescope.org/archives/images/wallpaper2/heic1509a.jpg)';
 canvas.style.backgroundSize = 'cover';
@@ -138,9 +162,10 @@ var step = function(){
 
 }
 
-video.onended = function(){
+video.onpause = function(){
+	console.log('paused')
 	frames = frames.map(function(f,i){
-	 return (i%2==0) ? f.reversePixels() : f;
+	 return (i%2==0) ? f : f.reversePixels();
 	//return f.invert();
 	})
 	// .map(function(f,i){
@@ -152,6 +177,7 @@ myreq = requestAnimationFrame(step);
 }
 
 video.onplaying = function(){
+	console.log('playing')
 	timerCallback()
 }
 
@@ -180,6 +206,8 @@ document.body.append(colorInput);
 var numberOfFrames = Math.round(video.duration*fps);
 }
 }
+
+getWebcam();
 
 
 })();
