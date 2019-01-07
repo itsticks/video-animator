@@ -98,7 +98,9 @@ video.controls=true;
 video.autoplay=true;
 video.muted=true;
 video.playbackRate=1;
-video.style.visibility = 'hidden';
+//video.style.position = 'fixed';
+//video.style.left = '-1000px';
+//video.style.visibility = 'hidden';
 
 var facingMode = window.innerWidth > window.innerHeight ? "user" : "environment";
   video.setAttribute('autoplay',true);
