@@ -92,6 +92,7 @@ var playingLive = true;
 var webcamOn = false;
 var track;
 var video = document.createElement('video');
+
 video.width=450;
 video.height=360;
 video.controls=true;
@@ -102,44 +103,9 @@ video.playbackRate=1;
 //video.style.left = '-1000px';
 //video.style.visibility = 'hidden';
 
-var facingMode = window.innerWidth > window.innerHeight ? "user" : "environment";
-  video.setAttribute('autoplay',true);
-  video.setAttribute('playsinline',true);
-video.setAttribute("controls", true);
-  
-
-  
-
-var recordButton = document.createElement('button');
-recordButton.append(document.createTextNode('Record'));
-	recordButton.disabled = false;
-recordButton.onclick = function(){
-	recording = true;
-	recordButton.style.backgroundColor = 'green';
-	setTimeout(function(){recording=false;	recordButton.style.backgroundColor = 'inherit';
-},3000);
-		}
-
-var webcamButton = document.createElement('button');
-		webcamButton.append(document.createTextNode('Webcam'));
-		webcamButton.onclick = function(){
-			if(!webcamOn){
-				webcamButton.style.backgroundColor = 'green';
-			navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false }).then(function(stream) {
-				window.stream = stream; 
-			  video.srcObject = stream;
-			  track = stream.getTracks()[0];
-			  webcamOn = true;
-			  playingLive = true;
-			}).catch(function(error){
-				console.error(error);
-			});	
-		} else{
-			track.stop();
-			webcamOn = false;
-			webcamButton.style.backgroundColor = 'inherit';
-		}
-				}
+var container = document.createElement('div');
+container.style.margin = 'auto';
+container.style.width = video.width + "px";
 
 var playButton = document.createElement('button');
 playButton.append(document.createTextNode('Play'));
@@ -154,7 +120,6 @@ playButton.onclick = function(){
 
    myreq = requestAnimationFrame(step);	
 }
-
 
 var canvas = document.createElement('canvas');
 canvas.width = 450//video.width;
@@ -188,12 +153,74 @@ var rotateLabel = document.createElement('label');
 rotateLabel.append(document.createTextNode('spin!'))
 rotateLabel.append(rotateInput)
 
+var flipInput = document.createElement('input');
+flipInput.type = 'checkbox';
+flipInput.style.display = 'inline-block';
+
+var flipLabel = document.createElement('label');
+flipLabel.append(document.createTextNode('flip!'))
+flipLabel.append(flipInput)
+
+var alphaInput = document.createElement('input');
+alphaInput.type = 'checkbox';
+alphaInput.style.display = 'inline-block';
+
+var alphaLabel = document.createElement('label');
+alphaLabel.append(document.createTextNode('alpha!'));
+alphaLabel.append(alphaInput);
+
+var frameSpliceInput = document.createElement('input');
+frameSpliceInput.type = 'number';
+frameSpliceInput.value = 1;
+frameSpliceInput.style.display = 'inline-block';
+frameSpliceInput.style.width='30px';
+
+var frameSpliceLabel = document.createElement('label');
+frameSpliceLabel.append(document.createTextNode('splice fx by frame'));
+frameSpliceLabel.append(frameSpliceInput);
+
+var recordButton = document.createElement('button');
+recordButton.append(document.createTextNode('Record'));
+	recordButton.disabled = false;
+recordButton.onclick = function(){
+	recording = true;
+	recordButton.style.backgroundColor = 'green';
+	setTimeout(function(){recording=false;	recordButton.style.backgroundColor = 'inherit';
+},3000);
+		}
+
+var facingMode = window.innerWidth > window.innerHeight ? "user" : "environment";
+	video.setAttribute('autoplay',true);
+	video.setAttribute('playsinline',true);
+	video.setAttribute("controls", true);
+
+var webcamButton = document.createElement('button');
+		webcamButton.append(document.createTextNode('Webcam'));
+		webcamButton.onclick = function(){
+			if(!webcamOn){
+				webcamButton.style.backgroundColor = 'green';
+			navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false }).then(function(stream) {
+				window.stream = stream; 
+			  video.srcObject = stream;
+			  track = stream.getTracks()[0];
+			  webcamOn = true;
+			  playingLive = true;
+			}).catch(function(error){
+				console.error(error);
+			});	
+		} else{
+			track.stop();
+			webcamOn = false;
+			webcamButton.style.backgroundColor = 'inherit';
+		}
+				}
+
+
 var step = function(){
 	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){
 			ctx.putImageData(frames[currentFrame],0,0)
 						currentFrame++;
 	}
-
 	animationCounter++;
 	//if(currentFrame===frames.length){currentFrame=0}
 	if(currentFrame!==frames.length){
@@ -222,16 +249,27 @@ var playLive = function() {
 	
 	ctx.drawImage(video,0,0,video.width,video.height);
 	var frame = ctx.getImageData(0,0,video.width,video.height);
-	if(frameCount%8===0){
+	if(frameCount%frameSpliceInput.value===0){
+	
+	if(flipInput.checked){
 		frame = frame.reversePixels();
 	}
-	frame.alphaGreen();
-	ctx.putImageData(frame,0,0)
-	if(rotateInput.checked){
-	    ctx.translate(video.width/2, video.height/2);
-    ctx.rotate(2*Math.PI/180);
-	  ctx.translate(-video.width/2, -video.height/2);
+	if(alphaInput.checked){
+		frame = frame.alphaGreen();
 	}
+}
+	ctx.putImageData(frame,0,0)
+
+	if(rotateInput.checked){
+		if(frameCount%frameSpliceInput.value===0){
+	    ctx.translate(video.width/2, video.height/2);
+    	ctx.rotate(2*Math.PI/180);
+	  	ctx.translate(-video.width/2, -video.height/2);
+		}
+	}else{
+		ctx.resetTransform();
+	}
+
    if(recording){
 	rawFrames.push(ctx.getImageData(0,0,video.width,video.height));
    }
@@ -241,7 +279,8 @@ var playLive = function() {
 	  frameCount++;
   }
 
-document.body.append(webcamButton,rotateLabel,canvas,video,videoInput,colorInput);
+container.append(webcamButton,rotateLabel,flipLabel,alphaLabel,frameSpliceLabel,canvas,video,videoInput,recordButton,playButton,colorInput);
+document.body.append(container);
 // recordButton,playButton
  // getWebcam();
  playLive();
