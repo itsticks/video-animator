@@ -180,7 +180,13 @@ colorInput.onchange = function(e){
 	canvas.style.backgroundColor = e.target.value;
 }
 
+var rotateInput = document.createElement('input');
+rotateInput.type = 'checkbox';
+rotateInput.style.display = 'inline-block';
 
+var rotateLabel = document.createElement('label');
+rotateLabel.append(document.createTextNode('spin!'))
+rotateLabel.append(rotateInput)
 
 var step = function(){
 	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){
@@ -221,9 +227,11 @@ var playLive = function() {
 	}
 	frame.alphaGreen();
 	ctx.putImageData(frame,0,0)
+	if(rotateInput.checked){
 	    ctx.translate(video.width/2, video.height/2);
     ctx.rotate(2*Math.PI/180);
-      ctx.translate(-video.width/2, -video.height/2);
+	  ctx.translate(-video.width/2, -video.height/2);
+	}
    if(recording){
 	rawFrames.push(ctx.getImageData(0,0,video.width,video.height));
    }
@@ -233,8 +241,8 @@ var playLive = function() {
 	  frameCount++;
   }
 
-document.body.append(webcamButton,recordButton,playButton,canvas,video,videoInput,colorInput);
-
+document.body.append(webcamButton,rotateLabel,canvas,video,videoInput,colorInput);
+// recordButton,playButton
  // getWebcam();
  playLive();
 
