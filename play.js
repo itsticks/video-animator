@@ -91,24 +91,24 @@ var playing = false;
 var playingLive = true;
 var webcamOn = false;
 var track;
-var video = document.createElement('video');
+var vd = document.createElement('video');
 
-video.width=450;
-video.height=360;
-video.controls=true;
-video.autoplay=true;
-video.muted=true;
-video.playbackRate=1;
-video.setAttribute('autoplay',true);
-video.setAttribute('playsinline',true);
-video.setAttribute("controls", true);
-video.style.position = 'fixed';
-video.style.top = '8px';
-video.style.zIndex = '-1';
+vd.width = window.innerWidth <= 450 ? window.innerWidth -20 : 450;
+vd.height=vd.width / 1.25;
+vd.controls=true;
+vd.autoplay=true;
+vd.muted=true;
+vd.playbackRate=1;
+vd.setAttribute('autoplay',true);
+vd.setAttribute('playsinline',true);
+vd.setAttribute("controls", true);
+vd.style.position = 'fixed';
+vd.style.top = '8px';
+vd.style.zIndex = '-1';
 
 var container = document.createElement('div');
 container.style.margin = 'auto';
-container.style.width = video.width + "px";
+container.style.width = vd.width + "px";
 
 var playButton = document.createElement('button');
 playButton.append(document.createTextNode('Play'));
@@ -122,29 +122,29 @@ playButton.onclick = function(){
    myreq = requestAnimationFrame(step);	
 }
 
-var canvas = document.createElement('canvas');
-canvas.width = 450//video.width;
-canvas.height = 360 //video.height;
-canvas.style.backgroundColor = "#009900";
-canvas.style.backgroundSize = 'cover';
-canvas.style.marginBottom = '20px';
+var cnvs = document.createElement('canvas');
+cnvs.width = window.innerWidth <= 450 ? window.innerWidth -20 : 450;//video.width;
+cnvs.height = cnvs.width / 1.25 ;
+cnvs.style.backgroundColor = "#009900";
+cnvs.style.backgroundSize = 'cover';
+cnvs.style.marginBottom = '20px';
 
-var ctx = canvas.getContext('2d');
+var ctx = cnvs.getContext('2d');
 ctx.fillStyle = "red"
 ctx.font = "15px Arial";
 
 var videoInput = document.createElement('input');
 videoInput.type = 'url';
-videoInput.value=video.src;
+videoInput.value=vd.src;
 videoInput.onchange = function(e){
-	video.src = e.target.value;
+	vd.src = e.target.value;
 }
 
 var colorInput = document.createElement('input');
 colorInput.type = 'color';
 colorInput.value='#009900';
 colorInput.onchange = function(e){
-	canvas.style.backgroundColor = e.target.value;
+	cnvs.style.backgroundColor = e.target.value;
 }
 
 var rotateInput = document.createElement('input');
@@ -209,7 +209,7 @@ var webcamButton = document.createElement('button');
 				webcamButton.style.backgroundColor = 'red';
 			navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false }).then(function(stream) {
 				window.stream = stream; 
-			  video.srcObject = stream;
+			  vd.srcObject = stream;
 			  track = stream.getTracks()[0];
 			  webcamOn = true;
 			  playingLive = true;
@@ -248,8 +248,8 @@ var playLive = function() {
       return;
 	}
 	
-	ctx.drawImage(video,0,0,video.width,video.height);
-	var frame = ctx.getImageData(0,0,video.width,video.height);
+	ctx.drawImage(vd,0,0,vd.width,vd.height);
+	var frame = ctx.getImageData(0,0,vd.width,vd.height);
 	if(frameCount%frameSpliceInput.value===0){
 	if(alphaInput.checked){
 			frame = frame.alphaGreen();
@@ -263,16 +263,16 @@ var playLive = function() {
 
 	if(rotateInput.checked){
 		if(frameCount%frameSpliceInput.value===0){
-	    ctx.translate(video.width/2, video.height/2);
+	    ctx.translate(vd.width/2, vd.height/2);
     	ctx.rotate(2*Math.PI/180);
-	  	ctx.translate(-video.width/2, -video.height/2);
+	  	ctx.translate(-vd.width/2, -vd.height/2);
 		}
 	}else{
 		ctx.resetTransform();
 	}
 
    if(recording){
-	rawFrames.push(ctx.getImageData(0,0,video.width,video.height));
+	rawFrames.push(ctx.getImageData(0,0,vd.width,vd.height));
    }
 	var timeout = setTimeout(function() {
         playLive();
@@ -280,7 +280,7 @@ var playLive = function() {
 	  frameCount++;
   }
 
-container.append(canvas,video,webcamButton,rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,altCameraLabel);
+container.append(cnvs,vd,webcamButton,rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,altCameraLabel);
 // videoInput,recordButton,playButton,colorInput
 document.body.append(container);
 
