@@ -99,9 +99,12 @@ video.controls=true;
 video.autoplay=true;
 video.muted=true;
 video.playbackRate=1;
-//video.style.position = 'fixed';
-//video.style.left = '-1000px';
-//video.style.visibility = 'hidden';
+video.setAttribute('autoplay',true);
+video.setAttribute('playsinline',true);
+video.setAttribute("controls", true);
+video.style.position = 'fixed';
+video.style.top = '8px';
+video.style.zIndex = '-1';
 
 var container = document.createElement('div');
 container.style.margin = 'auto';
@@ -111,11 +114,9 @@ var playButton = document.createElement('button');
 playButton.append(document.createTextNode('Play'));
 playButton.onclick = function(){
 	recording = false;
-//	track.stop();
 	playing = true;
 	frames = rawFrames.map(function(f,i){
-		return f; //.reversePixels();
-		//return (i%2==0) ? f : f.reversePixels();
+		return f;
 	   })
 
    myreq = requestAnimationFrame(step);	
@@ -126,6 +127,7 @@ canvas.width = 450//video.width;
 canvas.height = 360 //video.height;
 canvas.style.backgroundColor = "#009900";
 canvas.style.backgroundSize = 'cover';
+canvas.style.marginBottom = '20px';
 
 var ctx = canvas.getContext('2d');
 ctx.fillStyle = "red"
@@ -150,7 +152,7 @@ rotateInput.type = 'checkbox';
 rotateInput.style.display = 'inline-block';
 
 var rotateLabel = document.createElement('label');
-rotateLabel.append(document.createTextNode('spin!'))
+rotateLabel.append(document.createTextNode('spin'))
 rotateLabel.append(rotateInput)
 
 var flipInput = document.createElement('input');
@@ -158,7 +160,7 @@ flipInput.type = 'checkbox';
 flipInput.style.display = 'inline-block';
 
 var flipLabel = document.createElement('label');
-flipLabel.append(document.createTextNode('flip!'))
+flipLabel.append(document.createTextNode('flip matrix'))
 flipLabel.append(flipInput)
 
 var alphaInput = document.createElement('input');
@@ -166,7 +168,7 @@ alphaInput.type = 'checkbox';
 alphaInput.style.display = 'inline-block';
 
 var alphaLabel = document.createElement('label');
-alphaLabel.append(document.createTextNode('alpha!'));
+alphaLabel.append(document.createTextNode('alpha'));
 alphaLabel.append(alphaInput);
 
 var frameSpliceInput = document.createElement('input');
@@ -176,7 +178,7 @@ frameSpliceInput.style.display = 'inline-block';
 frameSpliceInput.style.width='30px';
 
 var frameSpliceLabel = document.createElement('label');
-frameSpliceLabel.append(document.createTextNode('splice fx by frame'));
+frameSpliceLabel.append(document.createTextNode('frame splice '));
 frameSpliceLabel.append(frameSpliceInput);
 
 var recordButton = document.createElement('button');
@@ -190,16 +192,9 @@ recordButton.onclick = function(){
 		}
 
 var facingMode = window.innerWidth > window.innerHeight ? "user" : "environment";
-	video.setAttribute('autoplay',true);
-	video.setAttribute('playsinline',true);
-	video.setAttribute("controls", true);
-	video.style.position = 'fixed';
-	video.style.top = '28px';
-	video.style.zIndex = '-1';
-	
 
 var webcamButton = document.createElement('button');
-		webcamButton.append(document.createTextNode('Webcam'));
+		webcamButton.append(document.createTextNode('🎥'));
 		webcamButton.onclick = function(){
 			if(!webcamOn){
 				webcamButton.style.backgroundColor = 'red';
@@ -219,13 +214,14 @@ var webcamButton = document.createElement('button');
 		}
 				}
 
+		
+
 var step = function(){
 	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){
 			ctx.putImageData(frames[currentFrame],0,0)
 						currentFrame++;
 	}
 	animationCounter++;
-	//if(currentFrame===frames.length){currentFrame=0}
 	if(currentFrame!==frames.length){
 	myreq = requestAnimationFrame(step);
 	}
@@ -236,13 +232,6 @@ var step = function(){
 	}
 }
 
-video.onpause = function(){
-	console.log('paused')
-}
-
-video.onplaying = function(){
-	console.log('playing')
-}
 
 var playLive = function() {
     if (!playingLive) {
@@ -253,13 +242,13 @@ var playLive = function() {
 	ctx.drawImage(video,0,0,video.width,video.height);
 	var frame = ctx.getImageData(0,0,video.width,video.height);
 	if(frameCount%frameSpliceInput.value===0){
-	
+	if(alphaInput.checked){
+			frame = frame.alphaGreen();
+	}
 	if(flipInput.checked){
 		frame = frame.reversePixels();
 	}
-	if(alphaInput.checked){
-		frame = frame.alphaGreen();
-	}
+
 }
 	ctx.putImageData(frame,0,0)
 
@@ -282,10 +271,10 @@ var playLive = function() {
 	  frameCount++;
   }
 
-container.append(webcamButton,rotateLabel,flipLabel,alphaLabel,frameSpliceLabel,canvas,video,videoInput,recordButton,playButton,colorInput);
+container.append(canvas,video,webcamButton,rotateLabel,flipLabel,alphaLabel,frameSpliceLabel);
+// videoInput,recordButton,playButton,colorInput
 document.body.append(container);
-// recordButton,playButton
- // getWebcam();
+
  playLive();
 
 
