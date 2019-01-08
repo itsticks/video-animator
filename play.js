@@ -124,7 +124,7 @@ playButton.onclick = function(){
 var canvas = document.createElement('canvas');
 canvas.width = 450//video.width;
 canvas.height = 360 //video.height;
-canvas.style.backgroundColor = "#000099";
+canvas.style.backgroundColor = "#009900";
 canvas.style.backgroundSize = 'cover';
 
 var ctx = canvas.getContext('2d');
@@ -186,19 +186,23 @@ recordButton.onclick = function(){
 	recording = true;
 	recordButton.style.backgroundColor = 'green';
 	setTimeout(function(){recording=false;	recordButton.style.backgroundColor = 'inherit';
-},3000);
+},5000);
 		}
 
 var facingMode = window.innerWidth > window.innerHeight ? "user" : "environment";
 	video.setAttribute('autoplay',true);
 	video.setAttribute('playsinline',true);
 	video.setAttribute("controls", true);
+	video.style.position = 'fixed';
+	video.style.top = '28px';
+	video.style.zIndex = '-1';
+	
 
 var webcamButton = document.createElement('button');
 		webcamButton.append(document.createTextNode('Webcam'));
 		webcamButton.onclick = function(){
 			if(!webcamOn){
-				webcamButton.style.backgroundColor = 'green';
+				webcamButton.style.backgroundColor = 'red';
 			navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false }).then(function(stream) {
 				window.stream = stream; 
 			  video.srcObject = stream;
@@ -214,7 +218,6 @@ var webcamButton = document.createElement('button');
 			webcamButton.style.backgroundColor = 'inherit';
 		}
 				}
-
 
 var step = function(){
 	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){
