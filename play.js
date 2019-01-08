@@ -155,13 +155,13 @@ var rotateLabel = document.createElement('label');
 rotateLabel.append(document.createTextNode('spin'))
 rotateLabel.append(rotateInput)
 
-var flipInput = document.createElement('input');
-flipInput.type = 'checkbox';
-flipInput.style.display = 'inline-block';
+var flipMatrix = document.createElement('input');
+flipMatrix.type = 'checkbox';
+flipMatrix.style.display = 'inline-block';
 
-var flipLabel = document.createElement('label');
-flipLabel.append(document.createTextNode('flip matrix'))
-flipLabel.append(flipInput)
+var flipMatrixLabel = document.createElement('label');
+flipMatrixLabel.append(document.createTextNode('flip matrix'))
+flipMatrixLabel.append(flipMatrix)
 
 var alphaInput = document.createElement('input');
 alphaInput.type = 'checkbox';
@@ -181,6 +181,14 @@ var frameSpliceLabel = document.createElement('label');
 frameSpliceLabel.append(document.createTextNode('frame splice '));
 frameSpliceLabel.append(frameSpliceInput);
 
+var altCameraInput = document.createElement('input');
+altCameraInput.type = 'checkbox';
+altCameraInput.style.display = 'inline-block';
+
+var altCameraLabel = document.createElement('label');
+altCameraLabel.append(document.createTextNode('Switch Camera '));
+altCameraLabel.append(altCameraInput);
+
 var recordButton = document.createElement('button');
 recordButton.append(document.createTextNode('Record'));
 	recordButton.disabled = false;
@@ -191,11 +199,12 @@ recordButton.onclick = function(){
 },5000);
 		}
 
-var facingMode = window.innerWidth > window.innerHeight ? "user" : "environment";
 
 var webcamButton = document.createElement('button');
 		webcamButton.append(document.createTextNode('🎥'));
 		webcamButton.onclick = function(){
+			var facingMode = altCameraInput.checked ? "user" : "environment";
+
 			if(!webcamOn){
 				webcamButton.style.backgroundColor = 'red';
 			navigator.mediaDevices.getUserMedia({ video: { facingMode: facingMode }, audio: false }).then(function(stream) {
@@ -245,7 +254,7 @@ var playLive = function() {
 	if(alphaInput.checked){
 			frame = frame.alphaGreen();
 	}
-	if(flipInput.checked){
+	if(flipMatrix.checked){
 		frame = frame.reversePixels();
 	}
 
@@ -271,7 +280,7 @@ var playLive = function() {
 	  frameCount++;
   }
 
-container.append(canvas,video,webcamButton,rotateLabel,flipLabel,alphaLabel,frameSpliceLabel);
+container.append(canvas,video,webcamButton,rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,altCameraLabel);
 // videoInput,recordButton,playButton,colorInput
 document.body.append(container);
 
