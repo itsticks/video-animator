@@ -185,6 +185,11 @@ var altCameraInput = document.createElement('input');
 altCameraInput.type = 'checkbox';
 altCameraInput.style.display = 'inline-block';
 
+altCameraInput.onchange = function(){
+	webcamButton.click();
+	webcamButton.click();
+}
+
 var altCameraLabel = document.createElement('label');
 altCameraLabel.append(document.createTextNode('switch cam '));
 altCameraLabel.append(altCameraInput);
