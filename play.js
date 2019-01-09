@@ -156,10 +156,13 @@ var vd = document.createElement('video');
 
 vd.width = window.innerWidth <= 800 ? window.innerWidth -20 : 800;
 vd.height=vd.width / 1.25;
-vd.controls=true;
+//vd.controls=true;
 vd.autoplay=true;
 vd.playbackRate=1;
-vd.setAttribute('playsinline',"");
+vd.setAttribute('autoplay',true);
+vd.setAttribute('playsinline',true);
+vd.setAttribute('controls',true);
+
 vd.style.position = 'fixed';
 vd.style.top = '8px';
 vd.style.zIndex = '-1';
