@@ -97,7 +97,6 @@ var test;
 
 		  if(document.getElementById('cameraSelect')===null){
 			navigator.mediaDevices.enumerateDevices().then(function(mediaDevices){
-				test = track;
 				var cameraSelect = document.createElement('select');
 				cameraSelect.id = 'cameraSelect';
 				var noOption = document.createElement('option');
