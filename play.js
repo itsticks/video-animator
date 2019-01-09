@@ -128,6 +128,10 @@ var test;
 		}
 		}).catch(function(error){
 			console.error(error);
+			var errorMessage = document.createElement('p');
+			errorMessage.append(document.createTextNode(errorMessage));
+			document.body.append(errorMessage);
+			test = errorMessage;
 		});	
 	//else{
 	//	track.stop();
