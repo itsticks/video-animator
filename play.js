@@ -121,6 +121,7 @@
 				});
 				document.body.append(cameraSelect);
 				cameraSelect.selectedIndex = 1;
+				cameraSelect.change();
 
 			});
 		}
