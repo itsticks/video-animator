@@ -1,3 +1,5 @@
+var test;
+
 (function(){
 
 
@@ -95,6 +97,7 @@
 
 		  if(document.getElementById('cameraSelect')===null){
 			navigator.mediaDevices.enumerateDevices().then(function(mediaDevices){
+				test = track;
 				var cameraSelect = document.createElement('select');
 				cameraSelect.id = 'cameraSelect';
 				var noOption = document.createElement('option');
@@ -109,6 +112,7 @@
 					var textNode = document.createTextNode(mediaDevice.label || 'Camera '+(i+1).toString());
 					cameraOption.append(textNode);
 					cameraSelect.append(cameraOption);
+					cameraSelect.value = track.getSettings().deviceId;
 					cameraSelect.onchange = function(){
 						if(this.value!="Off"){
 						webcamSwitch();
@@ -120,8 +124,6 @@
 				  }
 				});
 				document.body.append(cameraSelect);
-				cameraSelect.selectedIndex = 1;
-				cameraSelect.change();
 
 			});
 		}
