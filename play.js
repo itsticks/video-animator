@@ -2,87 +2,6 @@ var test;
 
 (function(){
 
-
-
-	ImageData.prototype.invert = function(){
-		for (var i = 0; i < this.data.length; i += 4) {
-			this.data[i] = 255 - this.data[i];     // red
-			this.data[i + 1] = 255 - this.data[i + 1]; // green
-			this.data[i + 2] = 255 - this.data[i + 2]; // blue
-		}
-		return this;
-	}
-	
-	ImageData.prototype.gray = function(){
-		for (var i = 0; i < this.data.length; i += 4) {
-		var r = this.data[i + 0];
-		var g = this.data[i + 1];
-		var b = this.data[i + 2];
-	
-		var v = r + g + b;
-		v /= 3;
-	
-		this.data[i + 0] = v;
-		this.data[i + 1] = v;
-		this.data[i + 2] = v;
-	}
-	return this;
-	}
-	
-	ImageData.prototype.alphaGreen = function(){
-		for (var i = 0; i < this.data.length/4; i++) {
-		 var r = this.data[i * 4 + 0];
-		 var g = this.data[i * 4 + 1];
-		 var b = this.data[i * 4 + 2];
-		 if (g > r && g > b){
-			 this.data[i * 4 + 3] = 0;
-		 }
-	 }
-	 return this;
-	}
-	
-	ImageData.prototype.alphaNonGreen = function(){
-		for (var i = 0; i < this.data.length/4; i++) {
-		 var r = this.data[i * 4 + 0];
-		 var g = this.data[i * 4 + 1];
-		 var b = this.data[i * 4 + 2];
-		 if (r > g || b > g){
-			 this.data[i * 4 + 3] = 0;
-		 }
-	 }
-	 return this;
-	}
-	
-	
-	ImageData.prototype.greenScramble = function(){
-		for (var i = 0; i < this.data.length; i++) {
-			// if(i<this.data.length/2){
-			//  this.data[i] = this.data[this.data.length/4 + i];
-		 // }
-		// else{
-		this.data[i] = Math.round(this.data.length/i) %2<1 ? this.data[this.data.length-i] : this.data.reverse()[i]
-		// }
-	 }
-	 return this;
-	}
-	
-	ImageData.prototype.reversePixels = function(){
-		this.data=this.data.reverse();
-		return this;
-	}
-	
-	ImageData.prototype.sortPixels = function(){
-		this.data=this.data.sort();
-		return this;
-	}
-	
-	ImageData.prototype.scramble = function(){
-			for (var i = 0; i < this.data.length; i++) {
-				this.data[i]=this.data[(this.data.length-i)];
-			}
-			return this;
-	}
-
 	function webcamSwitch(){
 		//var facingMode = altCameraInput.checked ? "user" : "environment";
 		var videoConstraints = document.getElementById('cameraSelect') != null && document.getElementById('cameraSelect').value!="" ?
@@ -133,11 +52,7 @@ var test;
 			document.body.append(errorMessage);
 			test = errorMessage;
 		});	
-	//else{
-	//	track.stop();
-	//	webcamOn = false;
-//		webcamButton.style.backgroundColor = 'inherit';
-	//}
+	
 			}
 
 var animationFrameInterval = 1;//Math.round(1000/fps);
@@ -156,12 +71,10 @@ var vd = document.createElement('video');
 
 vd.width = window.innerWidth <= 800 ? window.innerWidth -20 : 800;
 vd.height=vd.width / 1.25;
-//vd.controls=true;
+vd.controls=true;
 vd.autoplay=true;
 vd.playbackRate=1;
-vd.setAttribute('autoplay',true);
 vd.setAttribute('playsinline',true);
-vd.setAttribute('controls',true);
 
 vd.style.position = 'fixed';
 vd.style.top = '8px';
@@ -182,6 +95,7 @@ playButton.onclick = function(){
 
    myreq = requestAnimationFrame(step);	
 }
+
 
 var cnvs = document.createElement('canvas');
 cnvs.width = window.innerWidth <= 800 ? window.innerWidth -20 : 800;//video.width;
@@ -259,9 +173,6 @@ recordButton.onclick = function(){
 		}
 
 
-		
-
-		
 
 var step = function(){
 	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){
@@ -280,11 +191,14 @@ var step = function(){
 }
 
 
+
 var playLive = function() {
     if (!playingLive) {
     	clearTimeout(timeout);
       return;
 	}
+	
+
 	
 	ctx.drawImage(vd,0,0,vd.width,vd.height);
 	var frame = ctx.getImageData(0,0,vd.width,vd.height);
@@ -298,12 +212,7 @@ var playLive = function() {
 
 }
 
-	if(flipMatrix.checked){
-		ctx.translate(vd.width/2, vd.height/2);
-		ctx.rotate(Math.PI);
-		ctx.translate(-vd.width/2, -vd.height/2);
-		console.log('rotate')
-	}
+
 	if(rotateInput.checked){
 		if(frameCount%frameSpliceInput.value===0){
 	    ctx.translate(vd.width/2, vd.height/2);
@@ -314,16 +223,40 @@ var playLive = function() {
 		ctx.resetTransform();
 	}
 
-	ctx.putImageData(frame,0,0)
+	//ctx.drawImage(imageObj, 0,0,vd.width,vd.height);
 
+	ctx.putImageData(frame,0,0)
+	if(flipMatrix.checked){
+		ctx.translate(vd.width/2, vd.height/2);
+		ctx.rotate(Math.PI);
+		ctx.translate(-vd.width/2, -vd.height/2);
+		console.log('rotate')
+	}
+
+	
+	// var imageObj = new Image();
+	// imageObj.crossOrigin = "Anonymous";
+	// imageObj.src = 'https://images.weserv.nl/?url=www.glasgow.gov.uk/georgesquarewebcam/fullsize3.jpg';
+
+//	imageObj.onload = function(){
+	//ctx.drawImage(imageObj, 0,0,vd.width,vd.height)
+//	var frameAsImage = new Image();
+//	frameAsImage.src = cnvs.toDataURL("image/png");
+//	frameAsImage.onload = function(){
+	//	ctx.drawImage(frameAsImage,0,0,vd.width,vd.height)
+		var timeout = setTimeout(function() {
+			playLive();
+		  }, 10);
+		  frameCount++;
+//	}
+// }
 
    if(recording){
 	rawFrames.push(ctx.getImageData(0,0,vd.width,vd.height));
    }
-	var timeout = setTimeout(function() {
-        playLive();
-	  }, 10);
-	  frameCount++;
+
+
+
   }
 
 container.append(cnvs,vd,rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,colorInputLabel);
@@ -332,6 +265,5 @@ document.body.append(container);
 
  playLive();
  webcamSwitch();
- //webcamButton.click();
 
 })();
