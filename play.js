@@ -140,7 +140,7 @@ flipMatrix.type = 'checkbox';
 flipMatrix.style.display = 'inline-block';
 
 var flipMatrixLabel = document.createElement('label');
-flipMatrixLabel.append(document.createTextNode('flip matrix'))
+flipMatrixLabel.append(document.createTextNode('reverse pixels'))
 flipMatrixLabel.append(flipMatrix)
 
 var alphaInput = document.createElement('input');
@@ -152,23 +152,26 @@ alphaLabel.append(document.createTextNode('alpha'));
 alphaLabel.append(alphaInput);
 
 var frameSpliceInput = document.createElement('input');
-frameSpliceInput.type = 'number';
+frameSpliceInput.type = 'range';
+frameSpliceInput.min = 0;
+frameSpliceInput.max = 10;
+frameSpliceInput.step = 1;
 frameSpliceInput.value = 1;
 frameSpliceInput.style.display = 'inline-block';
-frameSpliceInput.style.width='30px';
+frameSpliceInput.style.width='50px';
 
 var frameSpliceLabel = document.createElement('label');
-frameSpliceLabel.append(document.createTextNode('frame splice '));
+frameSpliceLabel.append(document.createTextNode('nth frame fx'));
 frameSpliceLabel.append(frameSpliceInput);
 
 var opacityInput = document.createElement('input');
-opacityInput.type = 'number';
+opacityInput.type = 'range';
 opacityInput.min = 0.1;
 opacityInput.max = 1;
 opacityInput.step = 0.1
 opacityInput.value = 0.5;
 opacityInput.style.display = 'inline-block';
-opacityInput.style.width='30px';
+opacityInput.style.width='50px';
 
 var opacityLabel = document.createElement('label');
 opacityLabel.append(document.createTextNode('opacity '));

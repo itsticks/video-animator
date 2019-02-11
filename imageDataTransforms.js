@@ -61,9 +61,14 @@ ImageData.prototype.invert = function(){
 	}
 	
 	ImageData.prototype.reversePixels = function(){
-		this.data=this.data.reverse();
+		var reversedData=this.data.reverse();
+		this.data = this.data.map(function(x,i){
+			return i%2==0 ? x : reversedData[i];
+		})
 		return this;
 	}
+
+	// x.map(function(y,j){return j%2==0 ?y.reverse():y})
 	
 	ImageData.prototype.sortPixels = function(){
 		this.data=this.data.sort();
