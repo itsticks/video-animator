@@ -161,6 +161,19 @@ var frameSpliceLabel = document.createElement('label');
 frameSpliceLabel.append(document.createTextNode('frame splice '));
 frameSpliceLabel.append(frameSpliceInput);
 
+var opacityInput = document.createElement('input');
+opacityInput.type = 'number';
+opacityInput.min = 0;
+opacityInput.max = 1;
+opacityInput.step = 0.1
+opacityInput.value = 1;
+opacityInput.style.display = 'inline-block';
+opacityInput.style.width='30px';
+
+var opacityLabel = document.createElement('label');
+opacityLabel.append(document.createTextNode('opacity '));
+opacityLabel.append(opacityInput);
+
 
 var recordButton = document.createElement('button');
 recordButton.append(document.createTextNode('Record'));
@@ -188,6 +201,8 @@ var step = function(){
 			cancelAnimationFrame(myReq);
 			playing = false;
 	}
+	ctx.globalAlpha  = opacityInput.value;
+
 }
 
 
@@ -259,7 +274,7 @@ var playLive = function() {
 
   }
 
-container.append(cnvs,vd,rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,colorInputLabel);
+container.append(cnvs,vd,rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,opacityLabel,colorInputLabel);
 // videoInput,recordButton,playButton,colorInput
 document.body.append(container);
 
