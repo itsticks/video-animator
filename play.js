@@ -163,10 +163,10 @@ frameSpliceLabel.append(frameSpliceInput);
 
 var opacityInput = document.createElement('input');
 opacityInput.type = 'number';
-opacityInput.min = 0;
+opacityInput.min = 0.1;
 opacityInput.max = 1;
 opacityInput.step = 0.1
-opacityInput.value = 1;
+opacityInput.value = 0.5;
 opacityInput.style.display = 'inline-block';
 opacityInput.style.width='30px';
 
@@ -201,7 +201,6 @@ var step = function(){
 			cancelAnimationFrame(myReq);
 			playing = false;
 	}
-	ctx.globalAlpha  = opacityInput.value;
 
 }
 
@@ -216,6 +215,8 @@ var playLive = function() {
 
 	
 	ctx.drawImage(vd,0,0,vd.width,vd.height);
+	ctx.globalAlpha  = opacityInput.value;
+
 	var frame = ctx.getImageData(0,0,vd.width,vd.height);
 	if(frameCount%frameSpliceInput.value===0){
 	if(alphaInput.checked){
