@@ -328,6 +328,7 @@ var frameSpliceTimeout = setTimeout(function(){
 			clearTimeout(frameSpliceTimeout);
 			clearInterval(opacityIntrvl);
 			controls.style.display = "block";
+			sound.stop();
 		},30000)
 }
 
