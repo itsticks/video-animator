@@ -286,8 +286,8 @@ start.append(document.createTextNode('Start eCard'));
 
 // colins birthday card special automaticness
 start.onclick = function(){
+	controls.style.display = 'none';
 	this.disabled = true;
-
 	var sound = new Audio("https://freemusicarchive.org/file/music/WFMU/Furchick/The_New_Birthday_Song_Contest/Furchick_-_Hey_hey_birthday_song.mp3");
 	sound.play();
 	sound.loop = true;
@@ -329,6 +329,7 @@ var frameSpliceTimeout = setTimeout(function(){
 			clearInterval(opacityIntrvl);
 			controls.style.display = "block";
 			sound.pause();
+			start.disabled = false;
 		},40000)
 }
 
