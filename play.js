@@ -288,7 +288,7 @@ start.append(document.createTextNode('Start eCard'));
 start.onclick = function(){
 	this.disabled = true;
 
-	var sound = new Audio("https://freemusicarchive.org/file/music/WFMU/Monk_Turner__Fascinoma/The_New_Birthday_Song_Contest/Monk_Turner__Fascinoma_-_01_-_Its_Your_Birthday.mp3");
+	var sound = new Audio("https://freemusicarchive.org/file/music/WFMU/Furchick/The_New_Birthday_Song_Contest/Furchick_-_Hey_hey_birthday_song.mp3");
 	sound.play();
 	sound.loop = true;
 var alphaChange = 0.1;
@@ -328,8 +328,8 @@ var frameSpliceTimeout = setTimeout(function(){
 			clearTimeout(frameSpliceTimeout);
 			clearInterval(opacityIntrvl);
 			controls.style.display = "block";
-			sound.stop();
-		},30000)
+			sound.pause();
+		},40000)
 }
 
 
