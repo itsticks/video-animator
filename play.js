@@ -288,7 +288,7 @@ start.append(document.createTextNode('Start eCard'));
 start.onclick = function(){
 	controls.style.display = 'none';
 	this.disabled = true;
-	var sound = new Audio("https://freemusicarchive.org/file/music/WFMU/Furchick/The_New_Birthday_Song_Contest/Furchick_-_Hey_hey_birthday_song.mp3");
+	var sound = new Audio("keithsHappyBirthday.mp3");
 	sound.play();
 	sound.loop = true;
 var alphaChange = 0.1;
