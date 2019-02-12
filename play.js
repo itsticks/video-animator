@@ -41,7 +41,7 @@ var test;
 					}
 				  }
 				});
-				document.body.append(cameraSelect);
+				controls.append(cameraSelect);
 
 			});
 		}
@@ -278,7 +278,63 @@ var playLive = function() {
 
   }
 
-container.append(cnvs,vd,rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,opacityLabel,colorInputLabel);
+var controls = document.createElement('div');
+controls.style.display = 'none';
+var start = document.createElement('button');
+start.append(document.createTextNode('Start eCard'));
+
+
+// colins birthday card special automaticness
+start.onclick = function(){
+	this.disabled = true;
+
+	var sound = new Audio("https://freemusicarchive.org/file/music/WFMU/Monk_Turner__Fascinoma/The_New_Birthday_Song_Contest/Monk_Turner__Fascinoma_-_01_-_Its_Your_Birthday.mp3");
+	sound.play();
+	sound.loop = true;
+var alphaChange = 0.1;
+var spliceChange = 1;
+
+
+var rotateIntrvl = setInterval(function(){
+rotateInput.checked = rotateInput.checked ? false : true;
+	},8000)
+
+var flipIntrvl	= setInterval(function(){
+		flipMatrix.checked = flipMatrix.checked ? false : true;
+			},7000)
+
+var opacityIntrvl = setInterval(function(){
+				if(opacityInput.value===opacityInput.max){alphaChange=-0.1}
+				if(opacityInput.value===opacityInput.min){alphaChange=0.1}
+				var newVal = parseFloat(opacityInput.value)+parseFloat(alphaChange);
+				opacityInput.value = newVal;
+			},1000);
+
+			var spliceInterval = '';
+var frameSpliceTimeout = setTimeout(function(){
+	spliceInterval = setInterval(function(){
+				if(frameSpliceInput.value===frameSpliceInput.max){spliceChange=-1}
+				if(frameSpliceInput.value===frameSpliceInput.min){spliceChange=1}
+				var newVal = parseFloat(frameSpliceInput.value)+parseFloat(spliceChange);
+				frameSpliceInput.value = newVal;
+			},1000);
+		},10000)
+
+
+		setTimeout(function(){
+			clearInterval(rotateIntrvl);
+			clearInterval(flipIntrvl);
+			clearInterval(spliceInterval);
+			clearTimeout(frameSpliceTimeout);
+			clearInterval(opacityIntrvl);
+			controls.style.display = "block";
+		},30000)
+}
+
+
+controls.append(rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,opacityLabel,colorInputLabel)
+
+container.append(cnvs,vd,controls, start);
 // videoInput,recordButton,playButton,colorInput
 document.body.append(container);
 
