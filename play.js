@@ -236,7 +236,7 @@ var playLive = function() {
 	if(flipMatrix.checked){
 		frame = frame.reversePixels();
 	}
-	if(mirror.checked){
+	if(flip.checked){
 		frame = frame.flip();
 	}
 
