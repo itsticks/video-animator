@@ -143,6 +143,14 @@ var flipMatrixLabel = document.createElement('label');
 flipMatrixLabel.append(document.createTextNode('reverse pixels'))
 flipMatrixLabel.append(flipMatrix)
 
+var flip = document.createElement('input');
+flip.type = 'checkbox';
+flip.style.display = 'inline-block';
+
+var flipLabel = document.createElement('label');
+flipLabel.append(document.createTextNode('flip'))
+flipLabel.append(flip)
+
 var alphaInput = document.createElement('input');
 alphaInput.type = 'checkbox';
 alphaInput.style.display = 'inline-block';
@@ -228,6 +236,9 @@ var playLive = function() {
 	if(flipMatrix.checked){
 		frame = frame.reversePixels();
 	}
+	if(mirror.checked){
+		frame = frame.flip();
+	}
 
 }
 
@@ -251,6 +262,8 @@ var playLive = function() {
 		ctx.translate(-vd.width/2, -vd.height/2);
 		console.log('rotate')
 	}
+
+	
 
 	
 	// var imageObj = new Image();
@@ -278,7 +291,7 @@ var playLive = function() {
 
   }
 
-container.append(cnvs,vd,rotateLabel,flipMatrixLabel,alphaLabel,frameSpliceLabel,opacityLabel,colorInputLabel);
+container.append(cnvs,vd,rotateLabel,flipMatrixLabel,flipLabel,alphaLabel,frameSpliceLabel,opacityLabel,colorInputLabel);
 // videoInput,recordButton,playButton,colorInput
 document.body.append(container);
 

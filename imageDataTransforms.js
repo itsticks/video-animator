@@ -22,6 +22,25 @@ ImageData.prototype.invert = function(){
 	}
 	return this;
 	}
+
+	ImageData.prototype.flip = function(){  // Traverse every row and flip the pixels
+	for (i=0; i<this.height; i++)
+	{
+	 // We only need to do half of every row since we're flipping the halves
+	  for (j=0; j<this.width/2; j++)
+	  {
+		 var index=(i*4)*this.width+(j*4);
+		 var mirrorIndex=((i+1)*4)*this.width-((j+1)*4);
+		 for (p=0; p<4; p++)
+		 {
+		   var temp=this.data[index+p];
+		   this.data[index+p]=this.data[mirrorIndex+p];
+		   this.data[mirrorIndex+p]=temp;
+		 }
+	  }
+	}
+	return this;
+}
 	
 	ImageData.prototype.alphaGreen = function(){
 		for (var i = 0; i < this.data.length/4; i++) {
@@ -60,6 +79,12 @@ ImageData.prototype.invert = function(){
 	 return this;
 	}
 	
+	ImageData.prototype.cleanReverse = function(){
+		this.data = this.data.map(function(x,i){
+return i % 4 == 0 || i % 5 == 0 || i % 6 == 0
+		})
+	}
+
 	ImageData.prototype.reversePixels = function(){
 		var reversedData=this.data.reverse();
 		this.data = this.data.map(function(x,i){
