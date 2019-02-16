@@ -41,30 +41,23 @@ ImageData.prototype.invert = function(){
 	}
 	return this;
 }
-	
-	ImageData.prototype.alphaGreen = function(){
-		for (var i = 0; i < this.data.length/4; i++) {
-		 var r = this.data[i * 4 + 0];
-		 var g = this.data[i * 4 + 1];
-		 var b = this.data[i * 4 + 2];
-		 if (g > r && g > b){
-			 this.data[i * 4 + 3] = 0;
-		 }
-	 }
-	 return this;
+
+ImageData.prototype.alpha = function(color){
+	var colors = ['r','g','b'];
+	var othercolors = colors.filter(x=>x!=color);
+
+	for (var i = 0; i < this.data.length/4; i++) {
+	 var pixels = {
+	 'r': this.data[i * 4 + 0],
+	 'g': this.data[i * 4 + 1],
+	 'b': this.data[i * 4 + 2]
 	}
-	
-	ImageData.prototype.alphaNonGreen = function(){
-		for (var i = 0; i < this.data.length/4; i++) {
-		 var r = this.data[i * 4 + 0];
-		 var g = this.data[i * 4 + 1];
-		 var b = this.data[i * 4 + 2];
-		 if (r > g || b > g){
-			 this.data[i * 4 + 3] = 0;
-		 }
+	 if ( pixels[color] > pixels[othercolors[0]] && pixels[color] > pixels[othercolors[1]] ) {
+		 this.data[i * 4 + 3] = 0;
 	 }
-	 return this;
-	}
+ }
+ return this;
+}
 	
 	
 	ImageData.prototype.greenScramble = function(){

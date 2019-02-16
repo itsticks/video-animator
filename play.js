@@ -151,9 +151,15 @@ var flipLabel = document.createElement('label');
 flipLabel.append(document.createTextNode('flip'))
 flipLabel.append(flip)
 
-var alphaInput = document.createElement('input');
-alphaInput.type = 'checkbox';
+var alphaInput = document.createElement('select');
 alphaInput.style.display = 'inline-block';
+var alphaInputOptions = ['','red','green','blue'];
+alphaInputOptions.forEach(function(x){
+	var aio = document.createElement('option');
+	aio.value = x.substr(0,1);
+	aio.append(document.createTextNode(x));
+	alphaInput.append(aio);
+})
 
 var alphaLabel = document.createElement('label');
 alphaLabel.append(document.createTextNode('alpha'));
@@ -169,20 +175,20 @@ frameSpliceInput.style.display = 'inline-block';
 frameSpliceInput.style.width='50px';
 
 var frameSpliceLabel = document.createElement('label');
-frameSpliceLabel.append(document.createTextNode('nth frame fx'));
+frameSpliceLabel.append(document.createTextNode('nth frame '));
 frameSpliceLabel.append(frameSpliceInput);
 
 var opacityInput = document.createElement('input');
 opacityInput.type = 'range';
 opacityInput.min = 0.1;
 opacityInput.max = 1;
-opacityInput.step = 0.1
-opacityInput.value = 0.5;
+opacityInput.step = 0.01
+opacityInput.value = 1;
 opacityInput.style.display = 'inline-block';
 opacityInput.style.width='50px';
 
 var opacityLabel = document.createElement('label');
-opacityLabel.append(document.createTextNode('opacity '));
+opacityLabel.append(document.createTextNode('frame opacity '));
 opacityLabel.append(opacityInput);
 
 
@@ -230,8 +236,8 @@ var playLive = function() {
 
 	var frame = ctx.getImageData(0,0,vd.width,vd.height);
 	if(frameCount%frameSpliceInput.value===0){
-	if(alphaInput.checked){
-			frame = frame.alphaGreen();
+	if(alphaInput.value!=""){
+			frame = frame.alpha(alphaInput.value);
 	}
 	if(flipMatrix.checked){
 		frame = frame.reversePixels();
@@ -260,7 +266,6 @@ var playLive = function() {
 		ctx.translate(vd.width/2, vd.height/2);
 		ctx.rotate(Math.PI);
 		ctx.translate(-vd.width/2, -vd.height/2);
-		console.log('rotate')
 	}
 
 	
@@ -291,7 +296,7 @@ var playLive = function() {
 
   }
 
-container.append(cnvs,vd,rotateLabel,flipMatrixLabel,flipLabel,alphaLabel,frameSpliceLabel,opacityLabel,colorInputLabel);
+container.append(cnvs,vd,colorInputLabel,flipLabel,rotateLabel,alphaLabel,frameSpliceLabel,opacityLabel);
 // videoInput,recordButton,playButton,colorInput
 document.body.append(container);
 
