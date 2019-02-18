@@ -1,5 +1,3 @@
-var test;
-
 (function(){
 
 	function webcamSwitch(){
@@ -27,7 +25,7 @@ var test;
 				  if (mediaDevice.kind === 'videoinput') {
 					var cameraOption = document.createElement('option');
 					cameraOption.value = mediaDevice.deviceId;
-					var textNode = document.createTextNode(mediaDevice.label || 'Camera '+(i+1).toString());
+					var textNode = document.createTextNode(mediaDevice.label.toLowerCase() || 'camera '+(i+1).toString().toLowerCase());
 					cameraOption.append(textNode);
 					cameraSelect.append(cameraOption);
 					cameraSelect.value = track.getSettings().deviceId;
@@ -192,15 +190,7 @@ opacityLabel.append(document.createTextNode('frame opacity '));
 opacityLabel.append(opacityInput);
 
 
-var recordButton = document.createElement('button');
-recordButton.append(document.createTextNode('Record'));
-	recordButton.disabled = false;
-recordButton.onclick = function(){
-	recording = true;
-	recordButton.style.backgroundColor = 'green';
-	setTimeout(function(){recording=false;	recordButton.style.backgroundColor = 'inherit';
-},5000);
-		}
+
 
 
 
@@ -267,9 +257,6 @@ var playLive = function() {
 		ctx.rotate(Math.PI);
 		ctx.translate(-vd.width/2, -vd.height/2);
 	}
-
-	
-
 	
 	// var imageObj = new Image();
 	// imageObj.crossOrigin = "Anonymous";
@@ -292,15 +279,65 @@ var playLive = function() {
 	rawFrames.push(ctx.getImageData(0,0,vd.width,vd.height));
    }
 
+	}
+	var recorder = new CanvasRecorder(cnvs);
+	var recordButton = document.createElement('button');
+	var recordButtonText = document.createTextNode('record 🎥');
+	recordButton.append(recordButtonText);
+	recordButton.dataset.recording = '0';
+	recordButton.onclick = function(){
+		if(recordButton.dataset.recording=='1'){
+			recorder.stop();
+			recorder.save();
+			recordButton.dataset.recording = '0';
+			recordButtonText.nodeValue = 'record 🎥';
+			recordButton.style.backgroundColor = 'inherit';
+		} else {
+			recorder.start();
+			recordButton.dataset.recording = '1';
+			recordButton.style.backgroundColor = 'red';
+			recordButtonText.nodeValue = 'Stop 🎥';
 
+		}
+	}
 
-  }
+	var snapshots = document.createElement('ul');
+	function insertSnapshot(pngUrl){
+		var ss = document.createElement('li');
+		var ssl = document.createElement('a');
+		ssl.href = pngUrl.replace("image/png", "image/octet-stream");
+		ssl.download = true;
+		var ssi = document.createElement('img');
+		ssi.src = pngUrl;
+		ssi.style.width = "100px";
+		ssl.append(ssi);
+		ss.append(ssl);
+		snapshots.append(ss);
+	}
+
+	var downloadCapture = document.createElement('a');
+	downloadCapture.href = "";
+	downloadCapture.setAttribute("download",true);
+	downloadCapture.append(document.createTextNode('download'));
+
+	var captureButton = document.createElement('button');
+	var captureButtonText = document.createTextNode('snapshot 📷');
+
+	captureButton.append(captureButtonText);
+	downloadCapture.style.display = 'none';
+
+	captureButton.onclick = function(e){
+		e.preventDefault();
+		insertSnapshot(cnvs.toDataURL("image/png"));
+}
 
 container.append(cnvs,vd,colorInputLabel,flipLabel,rotateLabel,alphaLabel,frameSpliceLabel,opacityLabel);
-// videoInput,recordButton,playButton,colorInput
-document.body.append(container);
+
+// captureButton, snapshots
+document.body.append(container,recordButton);
 
  playLive();
  webcamSwitch();
+
 
 })();
