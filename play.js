@@ -67,8 +67,8 @@ var webcamOn = false;
 var track;
 var vd = document.createElement('video');
 
-vd.width = window.innerWidth <= 800 ? window.innerWidth -20 : 800;
-vd.height=vd.width / 1.25;
+vd.width = window.innerWidth;
+vd.height= window.innerHeight;
 vd.controls=true;
 vd.autoplay=true;
 vd.playbackRate=1;
@@ -81,6 +81,9 @@ vd.style.zIndex = '-1';
 var container = document.createElement('div');
 container.style.margin = 'auto';
 container.style.width = vd.width + "px";
+var controls = document.createElement('div');
+controls.style.backgroundColor = 'white';
+controls.style.opacity = '0.5'
 
 var playButton = document.createElement('button');
 playButton.append(document.createTextNode('Play'));
@@ -94,13 +97,13 @@ playButton.onclick = function(){
    myreq = requestAnimationFrame(step);	
 }
 
-
 var cnvs = document.createElement('canvas');
-cnvs.width = window.innerWidth <= 800 ? window.innerWidth -20 : 800;//video.width;
-cnvs.height = cnvs.width / 1.25 ;
+cnvs.width = window.innerWidth;//video.width;
+cnvs.height = window.innerHeight;
 cnvs.style.backgroundColor = "#009900";
 cnvs.style.backgroundSize = 'cover';
 cnvs.style.marginBottom = '20px';
+cnvs.style.position = 'fixed';
 
 var ctx = cnvs.getContext('2d');
 ctx.fillStyle = "red"
@@ -190,10 +193,6 @@ opacityLabel.append(document.createTextNode('frame opacity '));
 opacityLabel.append(opacityInput);
 
 
-
-
-
-
 var step = function(){
 	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){
 			ctx.putImageData(frames[currentFrame],0,0)
@@ -211,15 +210,11 @@ var step = function(){
 
 }
 
-
-
 var playLive = function() {
     if (!playingLive) {
     	clearTimeout(timeout);
       return;
 	}
-	
-
 	
 	ctx.drawImage(vd,0,0,vd.width,vd.height);
 	ctx.globalAlpha  = opacityInput.value;
@@ -331,9 +326,11 @@ var playLive = function() {
 		insertSnapshot(cnvs.toDataURL("image/png"));
 }
 
-container.append(cnvs,vd,colorInputLabel,flipLabel,rotateLabel,alphaLabel,frameSpliceLabel,opacityLabel);
+controls.append(colorInputLabel,flipLabel,rotateLabel,alphaLabel,frameSpliceLabel,opacityLabel);
+container.append(cnvs,vd,controls);
 
 // captureButton, snapshots
+
 document.body.append(container,recordButton);
 
  playLive();
