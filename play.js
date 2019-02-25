@@ -39,7 +39,7 @@
 					}
 				  }
 				});
-				document.body.append(cameraSelect);
+				controls.append(cameraSelect);
 
 			});
 		}
@@ -83,7 +83,7 @@ container.style.margin = 'auto';
 container.style.width = vd.width + "px";
 var controls = document.createElement('div');
 controls.style.backgroundColor = 'white';
-controls.style.opacity = '0.5'
+controls.style.opacity = '0.7'
 
 var playButton = document.createElement('button');
 playButton.append(document.createTextNode('Play'));
@@ -215,7 +215,7 @@ var playLive = function() {
     	clearTimeout(timeout);
       return;
 	}
-	
+	var landscape = vd.width > vd.height;
 	ctx.drawImage(vd,0,0,vd.width,vd.height);
 	ctx.globalAlpha  = opacityInput.value;
 
@@ -326,12 +326,12 @@ var playLive = function() {
 		insertSnapshot(cnvs.toDataURL("image/png"));
 }
 
-controls.append(colorInputLabel,flipLabel,rotateLabel,alphaLabel,frameSpliceLabel,opacityLabel);
+controls.append(colorInputLabel,flipLabel,rotateLabel,alphaLabel,frameSpliceLabel,opacityLabel,recordButton);
 container.append(cnvs,vd,controls);
 
 // captureButton, snapshots
 
-document.body.append(container,recordButton);
+document.body.append(container);
 
  playLive();
  webcamSwitch();
