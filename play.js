@@ -373,7 +373,7 @@ function displayNav(){
 window.onmousemove = function(e){
 displayNav();
 }
-window.ontouch = function(e){
+window.ontouchstart = function(e){
 	displayNav();
 	}
 
