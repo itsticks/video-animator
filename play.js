@@ -97,8 +97,9 @@ var container = document.createElement('div');
 container.style.margin = 'auto';
 container.style.width = vd.width + 'px';
 var controls = document.createElement('div');
+controls.style.transition = 'opacity .25s ease-in-out';
 controls.style.backgroundColor = 'white';
-controls.style.opacity = '0.7'
+controls.style.opacity = '0.9';
 
 var playButton = document.createElement('button');
 playButton.append(document.createTextNode('Play'));
@@ -355,9 +356,26 @@ document.body.append(container);
 
  window.onresize = function(){setDimensions()}; //If you write your own code, remember hex color shortcuts (eg., #fff, #000)
 
-window.onmousemove = function(e){
+ var navTimeout =	setTimeout(function(){
+	controls.style.opacity = '0';
+},5000);
 
+function displayNav(){
+	clearTimeout(navTimeout);
+	controls.style.transition = 'opacity .05s ease-in';
+	controls.style.opacity = '0.9';
+	navTimeout =	setTimeout(function(){
+		controls.style.transition = 'opacity .25s ease-out';
+		controls.style.opacity = '0';
+	},5000)
 }
+
+window.onmousemove = function(e){
+displayNav();
+}
+window.ontouch = function(e){
+	displayNav();
+	}
 
  // convert 'rbga(r,b,g,a)' to [r,b,g,a]
 

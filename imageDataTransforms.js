@@ -56,7 +56,7 @@ ImageData.prototype.alpha = function(color,swap){
 	//	 this.data[i * 4 + 0] = swap.r;
 	//	 this.data[i * 4 + 1] = swap.g;
 	//	 this.data[i * 4 + 2] = swap.b;
-	   this.data[i * 4 + 3] = swap.a;
+	   this.data[i * 4 + 3] = 0;
 	 }
  }
  return this;
