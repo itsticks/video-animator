@@ -1,7 +1,6 @@
 (function(){
 
 	function webcamSwitch(){
-		//var facingMode = altCameraInput.checked ? "user" : "environment";
 		var videoConstraints = document.getElementById('cameraSelect') != null && document.getElementById('cameraSelect').value!="" ?
 		 {deviceId:{ exact: document.getElementById('cameraSelect').value }} : {} //{ facingMode: facingMode }
 
@@ -33,7 +32,7 @@
 						if(this.value!="Off"){
 						webcamSwitch();
 						}
-						else{
+						else {
 							track.stop();
 						}
 					}
@@ -53,6 +52,12 @@
 	
 			}
 
+			function rgbObj(cssVal){
+				var arr = ((cssVal.split('rgb(')[1]).split(')')[0]).split(', ');
+				return {'r':arr[0],'g':arr[1],'b':arr[2]}
+				}
+				
+
 var animationFrameInterval = 1;//Math.round(1000/fps);
 var frames = [];
 var myReq;
@@ -67,20 +72,30 @@ var webcamOn = false;
 var track;
 var vd = document.createElement('video');
 
-vd.width = window.innerWidth;
-vd.height= window.innerHeight;
+function setDimensions(){
+	vd.width = window.innerWidth;
+	vd.height= window.innerHeight;
+	cnvs.width = window.innerWidth; //video.width;
+  cnvs.height = window.innerHeight;
+	container.style.width = vd.width + 'px';
+}
+
+
+
 vd.controls=true;
 vd.autoplay=true;
 vd.playbackRate=1;
 vd.setAttribute('playsinline',true);
 
 vd.style.position = 'fixed';
-vd.style.top = '8px';
 vd.style.zIndex = '-1';
+//vd.style.objectFit = 'cover';
+vd.style.width = '100%';
+vd.style.height = '100%';
 
 var container = document.createElement('div');
 container.style.margin = 'auto';
-container.style.width = vd.width + "px";
+container.style.width = vd.width + 'px';
 var controls = document.createElement('div');
 controls.style.backgroundColor = 'white';
 controls.style.opacity = '0.7'
@@ -93,21 +108,22 @@ playButton.onclick = function(){
 	frames = rawFrames.map(function(f,i){
 		return f;
 	   })
-
    myreq = requestAnimationFrame(step);	
 }
 
 var cnvs = document.createElement('canvas');
-cnvs.width = window.innerWidth;//video.width;
-cnvs.height = window.innerHeight;
-cnvs.style.backgroundColor = "#009900";
+
+cnvs.style.width = '100%'; //window.innerWidth; //video.width;
+cnvs.style.height = '100%'; //window.innerHeight;
+cnvs.style.objectFit = 'cover';
+cnvs.style.backgroundColor = 'rgb(153, 46, 53)';
 cnvs.style.backgroundSize = 'cover';
-cnvs.style.marginBottom = '20px';
 cnvs.style.position = 'fixed';
 
+
 var ctx = cnvs.getContext('2d');
-ctx.fillStyle = "red"
-ctx.font = "15px Arial";
+ctx.fillStyle = 'red'
+ctx.font = '15px Arial';
 
 var videoInput = document.createElement('input');
 videoInput.type = 'url';
@@ -118,10 +134,10 @@ videoInput.onchange = function(e){
 
 var colorInput = document.createElement('input');
 colorInput.type = 'color';
-colorInput.value='#009900';
+colorInput.value='#00ff00';
 colorInput.style.display = 'inline-block';
 colorInput.onchange = function(e){
-	cnvs.style.backgroundColor = e.target.value;
+	 cnvs.style.backgroundColor = e.target.value;
 }
 
 var colorInputLabel = document.createElement('label');
@@ -176,7 +192,7 @@ frameSpliceInput.style.display = 'inline-block';
 frameSpliceInput.style.width='50px';
 
 var frameSpliceLabel = document.createElement('label');
-frameSpliceLabel.append(document.createTextNode('nth frame '));
+frameSpliceLabel.append(document.createTextNode('fx every nth frame '));
 frameSpliceLabel.append(frameSpliceInput);
 
 var opacityInput = document.createElement('input');
@@ -192,7 +208,6 @@ var opacityLabel = document.createElement('label');
 opacityLabel.append(document.createTextNode('frame opacity '));
 opacityLabel.append(opacityInput);
 
-
 var step = function(){
 	if(animationCounter%animationFrameInterval==0 && frames[currentFrame]!=undefined){
 			ctx.putImageData(frames[currentFrame],0,0)
@@ -202,12 +217,11 @@ var step = function(){
 	if(currentFrame!==frames.length){
 	myreq = requestAnimationFrame(step);
 	}
-	else{
+	else {
 		currentFrame=0
 			cancelAnimationFrame(myReq);
 			playing = false;
 	}
-
 }
 
 var playLive = function() {
@@ -216,13 +230,15 @@ var playLive = function() {
       return;
 	}
 	var landscape = vd.width > vd.height;
+	var scale = landscape ? cnvs.width / vd.videoWidth : cnvs.height / vd.videoHeight;
+	//var leftOffset = 
 	ctx.drawImage(vd,0,0,vd.width,vd.height);
 	ctx.globalAlpha  = opacityInput.value;
 
 	var frame = ctx.getImageData(0,0,vd.width,vd.height);
 	if(frameCount%frameSpliceInput.value===0){
 	if(alphaInput.value!=""){
-			frame = frame.alpha(alphaInput.value);
+			frame = frame.alpha(alphaInput.value, rgbObj(cnvs.style.backgroundColor));
 	}
 	if(flipMatrix.checked){
 		frame = frame.reversePixels();
@@ -230,23 +246,23 @@ var playLive = function() {
 	if(flip.checked){
 		frame = frame.flip();
 	}
-
 }
 
-
-	if(rotateInput.checked){
+	if(rotateInput.checked) {
 		if(frameCount%frameSpliceInput.value===0){
 	    ctx.translate(vd.width/2, vd.height/2);
     	ctx.rotate(2*Math.PI/180);
 	  	ctx.translate(-vd.width/2, -vd.height/2);
 		}
-	}else{
+	} else {
 		ctx.resetTransform();
 	}
 
 	//ctx.drawImage(imageObj, 0,0,vd.width,vd.height);
-
-	ctx.putImageData(frame,0,0)
+	ctx.fillStyle = colorInput.value;
+	ctx.fillRect(0, 0, vd.width, vd.height);
+	//ctx.drawImage(vd,0,0,vd.width,vd.height);
+	ctx.putImageData(frame,0,0);
 	if(flipMatrix.checked){
 		ctx.translate(vd.width/2, vd.height/2);
 		ctx.rotate(Math.PI);
@@ -292,7 +308,6 @@ var playLive = function() {
 			recordButton.dataset.recording = '1';
 			recordButton.style.backgroundColor = 'red';
 			recordButtonText.nodeValue = 'Stop 🎥';
-
 		}
 	}
 
@@ -300,7 +315,7 @@ var playLive = function() {
 	function insertSnapshot(pngUrl){
 		var ss = document.createElement('li');
 		var ssl = document.createElement('a');
-		ssl.href = pngUrl.replace("image/png", "image/octet-stream");
+		ssl.href = pngUrl.replace('image/png', 'image/octet-stream');
 		ssl.download = true;
 		var ssi = document.createElement('img');
 		ssi.src = pngUrl;
@@ -323,8 +338,10 @@ var playLive = function() {
 
 	captureButton.onclick = function(e){
 		e.preventDefault();
-		insertSnapshot(cnvs.toDataURL("image/png"));
+		insertSnapshot(cnvs.toDataURL('image/png'));
 }
+
+setDimensions()
 
 controls.append(colorInputLabel,flipLabel,rotateLabel,alphaLabel,frameSpliceLabel,opacityLabel,recordButton);
 container.append(cnvs,vd,controls);
@@ -336,5 +353,15 @@ document.body.append(container);
  playLive();
  webcamSwitch();
 
+ window.onresize = function(){setDimensions()}; //If you write your own code, remember hex color shortcuts (eg., #fff, #000)
+
+window.onmousemove = function(e){
+
+}
+
+ // convert 'rbga(r,b,g,a)' to [r,b,g,a]
+
+
+ 
 
 })();

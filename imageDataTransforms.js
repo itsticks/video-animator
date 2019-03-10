@@ -42,7 +42,7 @@ ImageData.prototype.invert = function(){
 	return this;
 }
 
-ImageData.prototype.alpha = function(color){
+ImageData.prototype.alpha = function(color,swap){
 	var colors = ['r','g','b'];
 	var othercolors = colors.filter(x=>x!=color);
 
@@ -52,8 +52,11 @@ ImageData.prototype.alpha = function(color){
 	 'g': this.data[i * 4 + 1],
 	 'b': this.data[i * 4 + 2]
 	}
-	 if ( pixels[color] > pixels[othercolors[0]] && pixels[color] > pixels[othercolors[1]] ) {
-		 this.data[i * 4 + 3] = 0;
+	 if (pixels[color] > pixels[othercolors[0]] && pixels[color] > pixels[othercolors[1]]) {
+	//	 this.data[i * 4 + 0] = swap.r;
+	//	 this.data[i * 4 + 1] = swap.g;
+	//	 this.data[i * 4 + 2] = swap.b;
+	   this.data[i * 4 + 3] = swap.a;
 	 }
  }
  return this;
