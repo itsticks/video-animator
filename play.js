@@ -167,7 +167,15 @@ flip.style.display = 'inline-block';
 
 var flipLabel = document.createElement('label');
 flipLabel.append(document.createTextNode('flip'))
-flipLabel.append(flip)
+	flipLabel.append(flip);
+
+var scramble = document.createElement('input');
+scramble.type = 'checkbox';
+scramble.style.display = 'inline-block';
+
+var scrambleLabel = document.createElement('label');
+scrambleLabel.append(document.createTextNode('scramble'))
+scrambleLabel.append(scramble)
 
 var alphaInput = document.createElement('select');
 alphaInput.style.display = 'inline-block';
@@ -238,15 +246,21 @@ var playLive = function() {
 
 	var frame = ctx.getImageData(0,0,vd.width,vd.height);
 	if(frameCount%frameSpliceInput.value===0){
-	if(alphaInput.value!=""){
-			frame = frame.alpha(alphaInput.value, rgbObj(cnvs.style.backgroundColor));
-	}
+
 	if(flipMatrix.checked){
 		frame = frame.reversePixels();
 	}
 	if(flip.checked){
 		frame = frame.flip();
 	}
+		
+	if(scramble.checked){
+		frame = frame.scramble();
+		}
+			if(alphaInput.value!=""){
+			frame = frame.alpha(alphaInput.value, rgbObj(cnvs.style.backgroundColor));
+	}
+		
 }
 
 	if(rotateInput.checked) {
@@ -270,22 +284,12 @@ var playLive = function() {
 		ctx.translate(-vd.width/2, -vd.height/2);
 	}
 	
-	// var imageObj = new Image();
-	// imageObj.crossOrigin = "Anonymous";
-	// imageObj.src = 'https://images.weserv.nl/?url=www.glasgow.gov.uk/georgesquarewebcam/fullsize3.jpg';
 
-//	imageObj.onload = function(){
-	//ctx.drawImage(imageObj, 0,0,vd.width,vd.height)
-//	var frameAsImage = new Image();
-//	frameAsImage.src = cnvs.toDataURL("image/png");
-//	frameAsImage.onload = function(){
-	//	ctx.drawImage(frameAsImage,0,0,vd.width,vd.height)
 		var timeout = setTimeout(function() {
 			playLive();
 		  }, 10);
 		  frameCount++;
-//	}
-// }
+
 
    if(recording){
 	rawFrames.push(ctx.getImageData(0,0,vd.width,vd.height));
@@ -344,7 +348,7 @@ var playLive = function() {
 
 setDimensions()
 
-controls.append(colorInputLabel,flipLabel,rotateLabel,alphaLabel,frameSpliceLabel,opacityLabel,recordButton);
+controls.append(colorInputLabel,flipLabel,rotateLabel,scrambleLabel,alphaLabel,frameSpliceLabel,opacityLabel,recordButton);
 container.append(cnvs,vd,controls);
 
 // captureButton, snapshots
@@ -356,7 +360,7 @@ document.body.append(container);
 
  window.onresize = function(){setDimensions()}; //If you write your own code, remember hex color shortcuts (eg., #fff, #000)
 
- var navTimeout =	setTimeout(function(){
+ var navTimeout = setTimeout(function(){
 	controls.style.opacity = '0';
 },5000);
 
@@ -371,11 +375,12 @@ function displayNav(){
 }
 
 window.onmousemove = function(e){
-displayNav();
+	displayNav();
 }
+	
 window.ontouchstart = function(e){
 	displayNav();
-	}
+}
 
  // convert 'rbga(r,b,g,a)' to [r,b,g,a]
 

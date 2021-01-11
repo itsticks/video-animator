@@ -82,7 +82,7 @@ return i % 4 == 0 || i % 5 == 0 || i % 6 == 0
 	}
 
 	ImageData.prototype.reversePixels = function(){
-		var reversedData=this.data.reverse();
+		var reversedData = this.data;
 		this.data = this.data.map(function(x,i){
 			return i%2==0 ? x : reversedData[i];
 		})
@@ -96,9 +96,10 @@ return i % 4 == 0 || i % 5 == 0 || i % 6 == 0
 		return this;
 	}
 	
-	ImageData.prototype.scramble = function(){
+ImageData.prototype.scramble = function () {
+	var ogData = this.data.slice();
 			for (var i = 0; i < this.data.length; i++) {
-				this.data[i]=this.data[(this.data.length-i)];
+				this.data[i]= i%6==0 ?  ogData[Math.round(Math.random()*this.data.length)] : this.data[i];
 			}
 			return this;
 	}
