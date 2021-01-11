@@ -170,8 +170,13 @@ flipLabel.append(document.createTextNode('flip'))
 	flipLabel.append(flip);
 
 var scramble = document.createElement('input');
-scramble.type = 'checkbox';
+scramble.type = 'range';
+scramble.min = 0;
+scramble.max = 101;
+scramble.step = 1;
+scramble.value = 0;
 scramble.style.display = 'inline-block';
+scramble.style.width='50px';
 
 var scrambleLabel = document.createElement('label');
 scrambleLabel.append(document.createTextNode('scramble'))
@@ -253,13 +258,12 @@ var playLive = function() {
 	if(flip.checked){
 		frame = frame.flip();
 	}
-		
-	if(scramble.checked){
-		frame = frame.scramble();
+	if(scramble.value!=""){
+		frame = frame.scramble(scramble.value);
 		}
-			if(alphaInput.value!=""){
+	if(alphaInput.value!=""){
 			frame = frame.alpha(alphaInput.value, rgbObj(cnvs.style.backgroundColor));
-	}
+		}
 		
 }
 
@@ -348,7 +352,7 @@ var playLive = function() {
 
 setDimensions()
 
-controls.append(colorInputLabel,flipLabel,rotateLabel,scrambleLabel,alphaLabel,frameSpliceLabel,opacityLabel,recordButton);
+controls.append(colorInputLabel,flipLabel,rotateLabel,alphaLabel,scrambleLabel,frameSpliceLabel,opacityLabel,recordButton);
 container.append(cnvs,vd,controls);
 
 // captureButton, snapshots

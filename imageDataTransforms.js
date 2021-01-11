@@ -96,10 +96,10 @@ return i % 4 == 0 || i % 5 == 0 || i % 6 == 0
 		return this;
 	}
 	
-ImageData.prototype.scramble = function () {
+ImageData.prototype.scramble = function (amount) {
 	var ogData = this.data.slice();
 			for (var i = 0; i < this.data.length; i++) {
-				this.data[i]= i%6==0 ?  ogData[Math.round(Math.random()*this.data.length)] : this.data[i];
+				this.data[i] = i % amount == 0 ?  ogData[Math.round(Math.random()*this.data.length)] : this.data[i];
 			}
 			return this;
 	}
